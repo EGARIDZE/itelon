@@ -1,0 +1,24 @@
+.section__container .navigation-config {
+    grid-template-columns: unset;
+}
+.navigation-config__group-row {
+    display: grid;
+    gap: 25px 50px;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+}
+.navigation-config__group-row .navigation-config__list {
+    gap: 10px 10px;
+}
+.navigation-config__tabs {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.navigation-config__tab {
+    background: white;
+    padding: 16px;
+    border-radius: 16px;
+    &._active, &:hover {
+        background: #BAE2F7;
+    }
+}

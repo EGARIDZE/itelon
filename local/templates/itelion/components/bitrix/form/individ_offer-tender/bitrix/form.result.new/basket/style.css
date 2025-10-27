@@ -1,0 +1,9 @@
+.popup-form__block {
+    max-height: 440px;
+}
+.popup-form__list {
+    margin-top: unset;
+}
+.popup-form__result.description p {
+    font-size: 14px;
+}

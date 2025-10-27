@@ -1,0 +1,7 @@
+a.sort {
+    color: #000 !important;
+    text-decoration: none
+}
+.navigation-config__item {
+    width: fit-content;
+}

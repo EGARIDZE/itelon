@@ -1,0 +1,110 @@
+:root {
+    --grayText: rgb(88, 97, 106);
+}
+#config_form-add .btn_primary {
+    background-color: #EC2D2D;
+    border: none;
+    &:hover {
+        background-color: #CD0E10;
+    }
+}
+#config_form .input-set__item {
+    padding: unset;
+    border: unset;
+}
+.dropdown__option._group {
+    pointer-events: none;
+    font-weight: 600;
+    padding-left: 50px;
+}
+._hidden, .input-set__item.template, .solution-config__leasing ._hidden {
+    display: none;
+}
+.invisible {
+    visibility: hidden;
+}
+.form-group.checkbox {
+    font-weight: unset;
+    font-size: unset;
+    font-family: unset;
+}
+.label__text {
+    font-size: 16px;
+    font-weight: 400;
+    font-family: InterRegular, sans-serif;
+    color: var(--grayText);
+}
+.input-set__item {
+    align-items: center;
+}
+.input-set__item .checkbox__label {
+    color: var(--grayText);
+}
+.input-set__attention.for-cbox {
+    width: 32px;
+    height: 32px;
+}
+.input-set__attention-desc {
+    z-index: 1;
+}
+.input-set__item .input-radio__item {
+    width: 100%;
+}
+.input-set-item__delete::after {
+    content: url(/local/templates/itelion/styles/../files/icons/delete.svg);
+    display: block;
+    width: 16px;
+    height: 16px;
+}
+.input-set-item__delete {
+    background-color: transparent;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.input-inn__wrapper p.warning-message {
+    font-size: initial;
+    color: red;
+}
+.input-inn__wrapper p.label {
+    font-size: initial;
+}
+#config_form-add {
+    position: sticky;
+    top: 100px;
+    /*max-height: 720px;*/
+    overflow: hidden scroll;
+}
+.form-group.input-set.text-row {
+    flex-direction: row;
+    align-items: center;
+    & > label {
+        flex: max-content 0 1;
+    }
+    & > div {
+        flex: min-content 1 1;
+    }
+}
+.solution-config__task-desc li.template {
+    display: none;
+}
+
+@media screen and (min-width: 576px) {
+    .form-group label {
+        width: 100%;
+    }
+}
+@media screen and (max-width: 575px) {
+    .form-group.input-set.text-row {
+        flex-direction: column;
+        align-items: start;
+    }
+    .input-set__item .dropdown.select-option {
+        width: 100%;
+    }
+    .invisible {
+        display: none !important;
+    }
+}

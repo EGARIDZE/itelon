@@ -1,0 +1,67 @@
+<? if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
+
+/**
+ * @var CBitrixComponentTemplate $this
+ * @var CatalogSectionComponent $component
+ */
+
+$component = $this->getComponent();
+$arParams = $component->applyTemplateModifications();
+
+
+foreach ($arResult['ITEMS'] as &$arItem) {
+	$arItem['CARD_DATA']['PRICE'] = CDataModifier::PriceFormat($arItem['ITEM_PRICES'][0]['PRICE']);
+	$arItem['CARD_DATA']['AVAIL'] = CDataModifier::QtyToStrValues($arItem['CATALOG_QUANTITY']);
+	$modelId = $arItem['PROPERTIES']['MODEL_LINK']['VALUE'] ?? '';
+	$arVendor = $arItem['DISPLAY_PROPERTIES']['MANUFACTURER']['LINK_ELEMENT_VALUE'];
+	$vendorName = $arVendor ? reset($arVendor)['NAME'] : '';
+	$type = $arItem['PROPERTIES']['TYPE_EQUIPMENT']['VALUE'] ?? '';
+	$arItem['CARD_DATA']['CONFIG_URL'] = CDataHarvester::GetConfigUrl($modelId, $vendorName, $type);
+}
+unset($arItem);
+//clog($arResult['ITEMS']);
+
+$arResult['SELECTED_ROWS_COUNT'] = 0;
+$arResult['min_price'] = 0;
+foreach ($arResult['ITEMS'] as $item){
+
+    $arResult['SELECTED_ROWS_COUNT']++;
+    if ($arResult['min_price'] == 0 || ($item['ITEM_PRICES'][0]['BASE_PRICE'] < $arResult['min_price'] && $item['ITEM_PRICES'][0]['BASE_PRICE'] > 0))
+    {
+        $arResult['min_price'] = $item['ITEM_PRICES'][0]['BASE_PRICE'];
+    }
+
+}
+
+$arResult['ITEM_ROWS'][3] = [
+    "VARIANT" => 2,
+    "TYPE" => "CARD",
+    "COLS" => 3,
+    "CLASS" => "product-item-list-col-3",
+    "CODE" => "3",
+    "ENLARGED_POS" => false,
+    "SHOW_ONLY_FULL" => false,
+    "COUNT" => 3,
+    "DEFAULT" => "Y"
+];
+
+$arResult['ITEMS'][8] ? $arResult['ITEMS'][11] = $arResult['ITEMS'][8] : '';
+$arResult['ITEMS'][9] ? $arResult['ITEMS'][10] = $arResult['ITEMS'][9] : '';
+$arResult['ITEMS'][7] ? $arResult['ITEMS'][9] = $arResult['ITEMS'][7] : '';
+$arResult['ITEMS'][7] ? $arResult['ITEMS'][8] = $arResult['ITEMS'][7] : '';
+$arResult['ITEMS'][6] ? $arResult['ITEMS'][7] = $arResult['ITEMS'][6] : '';
+$arResult['ITEMS'][5] ? $arResult['ITEMS'][6] = $arResult['ITEMS'][5] : '';
+$arResult['ITEMS'][4] ? $arResult['ITEMS'][5] = $arResult['ITEMS'][4] : '';
+
+if($arResult['SELECTED_ROWS_COUNT'] >= 8) {
+    $arResult['ITEMS'][9] = [
+        "FORM_HTML" => '<div class="products-banner-new__list"><div class="products-banner-new__item"><div class="products-banner__content"><div class="products-banner__title">Обязательное тестирование до отгрузки</div><div class="products-banner__text">Надежная защита от заводского брака</div></div></div><div class="products-banner-new__item"><div class="products-banner__content"><div class="products-banner__title">Собственный склад серверов и опций</div><div class="products-banner__text">Замена по гарантии в течение нескольких дней</div></div></div><div class="products-banner-new__item"><div class="products-banner__content"><div class="products-banner__title">Новое и оригинальное оборудование</div><div class="products-banner__text">Как проверить оригинальность и срок производства?</div></div></div></div><div class="products-banner-new__request"><div class="products-banner__subtitle">Нужна техническая консультация по выбору сервера?</div><div class="products-banner__btn"><span class="btn btn_large btn_secondary" ><span class="children">Оставить заявку</span><a href="#consultation" class="cover popup-link" ></a></span></div></div>',
+    ];
+}
+if($arResult['SELECTED_ROWS_COUNT'] >= 4) {
+    $arResult['ITEMS'][4] = [
+        "FORM_HTML" => '<div class="products-banner-new__list"><div class="products-banner-new__item"><div class="products-banner__content"><div class="products-banner__title">Обязательное тестирование до отгрузки</div><div class="products-banner__text">Надежная защита от заводского брака</div></div></div><div class="products-banner-new__item"><div class="products-banner__content"><div class="products-banner__title">Собственный склад серверов и опций</div><div class="products-banner__text">Замена по гарантии в течение нескольких дней</div></div></div><div class="products-banner-new__item"><div class="products-banner__content"><div class="products-banner__title">Новое и оригинальное оборудование</div><div class="products-banner__text">Как проверить оригинальность и срок производства?</div></div></div></div><div class="products-banner-new__request"><div class="products-banner__subtitle">Нужна техническая консультация по выбору сервера?</div><div class="products-banner__btn"><span class="btn btn_large btn_secondary" ><span class="children">Оставить заявку</span><a href="#consultation" class="cover popup-link" ></a></span></div></div>',
+    ];
+}
+
+clog($arParams, $arResult);

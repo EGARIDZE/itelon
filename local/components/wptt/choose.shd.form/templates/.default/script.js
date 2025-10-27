@@ -1,0 +1,90 @@
+// const inputsRadio = document.querySelector('.inputs-radio-mark').querySelectorAll('input[type="radio"]')
+//
+// console.log(123)
+//
+// inputsRadio.forEach(elem =>{
+//     elem.addEventListener('click', ()=>{
+//         if(elem.checked == true){
+//             document.getElementById('radio-mark').innerText = elem.value
+//         }
+//     })
+// } )
+let i = 0
+document.querySelectorAll('.solution-config__task-item').forEach(elem => {
+    console.log(elem.getAttribute('id'))
+    const titleId = elem.getAttribute('id')
+
+    const optionInp = document.querySelector(`div[data-id='${titleId}']`)
+    if (optionInp){
+
+            optionInp.querySelectorAll('input').forEach(el =>{
+                if(el){
+
+                    el.addEventListener('click', ()=>{
+
+
+                        if(el.getAttribute('type') == 'checkbox'){
+
+                            if(elem.querySelector('span').innerText == 'Да'){
+                                elem.querySelector('span').innerText = 'Нет'
+                            }
+                            else if(elem.querySelector('span').innerText == 'Нет'){
+                                elem.querySelector('span').innerText = 'Да'
+                            }
+
+                        }
+                        else{
+                            elem.querySelector('span').innerText = el.value
+                        }
+                    })
+
+                }
+            })
+            if(optionInp.getAttribute('data-id') == 'data-13'){
+                document.querySelectorAll('input').forEach(el => {
+                    el.addEventListener('click', ()=>{
+                        if (el.getAttribute('type') == 'checkbox') {
+
+                            if (el.checked == true) {
+                                i++
+
+                                elem.querySelector('span').innerText = i
+                            } else {
+                                i--
+                                elem.querySelector('span').innerText = i
+                            }
+                        }
+                    })
+
+                })
+            }
+            document.querySelectorAll('div[button-canche-input]').forEach(e =>{
+                e.addEventListener('click', ()=>{
+                    if(e.classList.contains('input-count__btn_lower')){
+                        if(e.parentElement.getAttribute('data-id') == elem.getAttribute('id')){
+                            elem.querySelector('span').innerText = +e.parentElement.querySelector('input').value - 1
+                        }
+                    }
+                   else if(e.classList.contains('input-count__btn_uppper')){
+                        if(e.parentElement.getAttribute('data-id') == elem.getAttribute('id')){
+                            elem.querySelector('span').innerText = +e.parentElement.querySelector('input').value + 1
+                        }
+                    }
+
+
+                })
+            })
+            optionInp.querySelectorAll('li').forEach(el =>{
+                if(el){
+
+                    el.addEventListener('click', ()=>{
+
+                        elem.querySelector('span').innerText = el.textContent
+                    })
+                }
+            })
+
+    }
+
+
+})

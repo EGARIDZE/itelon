@@ -1,0 +1,28 @@
+a.sort {
+    color: #000 !important;
+    text-decoration: none
+}
+.head-banner__container {
+    height: 50px;
+    font-family: InterRegular, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.6rem;
+    color: #191C1E;
+    align-content: center;
+    padding-left: 20px;
+    border-radius: 8px;
+    border-left: 3px solid;
+    &.blue {
+        background-color: #DAF0FB;
+        border-left-color: #005AA3;
+    }
+    &.red {
+        background-color: #fddfdf;
+        border-left-color: #cd0f0f;
+    }
+    &.green {
+        background-color: #DAFBE5;
+        border-left-color: #0BC147;
+    }
+}

@@ -1,0 +1,11 @@
+.product-preview__title ul li {
+    word-break: break-word !important;
+}
+.product-preview__title p {
+    font-size: 1.4rem;
+    word-break: break-word;
+    font-family: InterLight, sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    padding-left: 1rem;
+}
