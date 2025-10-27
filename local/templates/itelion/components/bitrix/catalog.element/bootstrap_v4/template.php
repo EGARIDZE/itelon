@@ -26,7 +26,6 @@ $bHidePrice = empty($arResult['ITEM_PRICES']) && ($arResult['PROPERTIES']['MANUF
     || $arResult['PROPERTIES']['DISCONTINUED']['VALUE']);
 ?>
 
-
 <section class="section">
     <div class="container">
         <div class="section__column">
@@ -235,6 +234,31 @@ $bHidePrice = empty($arResult['ITEM_PRICES']) && ($arResult['PROPERTIES']['MANUF
 			                    <? endif; ?>
                             </ul>
                         </div>
+
+                        <div class="rating"
+                             data-product-id="<?= (int)$arResult['ID'] ?>"
+                             data-initial-value="<?= $arResult['PROPERTIES']['RATING_VALUE']['VALUE'] ?: 5 ?>"
+                             data-initial-count="<?= $arResult['PROPERTIES']['RATING_COUNT']['VALUE'] ?: 1 ?>">
+
+                            <div class="rating-stars" aria-label="Оцените товар">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <button class="star" type="button" data-value="<?= $i ?>" aria-label="<?= $i ?> из 5" title="<?= $i ?> из 5">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" class="star-icon" aria-hidden="true">
+                                            <path d="M12 17.27L18.18 21l-1.64-7.03 L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z"/>
+                                        </svg>
+                                    </button>
+                                <?php endfor; ?>
+                            </div>
+
+                            <div class="rating-message js-rating-message"></div>
+
+                            <div class="rating-meta">
+                                <span class="rating-value js-rating-value"></span>
+                                <span class="rating-count js-rating-count"></span>
+                            </div>
+                        </div>
+
+
                         <div class="ware-settings__btns">
                             <div class="ware-settings__buy">
                                 <?
@@ -668,6 +692,19 @@ $bHidePrice = empty($arResult['ITEM_PRICES']) && ($arResult['PROPERTIES']['MANUF
                                     </div>
                                 <? endforeach; ?>
 
+                            <div class="specifications__item">
+                                <h3>Среднее значение рейтинга</h3>
+                                <div id="ratingValue" class="specifications__value">
+                                    <?= $arResult['PROPERTIES']['RATING_VALUE']['VALUE'] ?? 5 ?>
+                                </div>
+                            </div>
+                            <div class="specifications__item">
+                                <h3>Колличество голосов</h3>
+                                <div id="ratingCount" class="specifications__value">
+                                    <?= $arResult['PROPERTIES']['RATING_COUNT']['VALUE'] ?? 1 ?>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 	                <? endif; ?>
@@ -825,8 +862,8 @@ $bHidePrice = empty($arResult['ITEM_PRICES']) && ($arResult['PROPERTIES']['MANUF
                     <?php
                     $GLOBALS['groupFilter']['=ID'] = $arResult['PROPERTIES']['SIMILAR_PRODUCTS']['VALUE'];
                     $APPLICATION->IncludeComponent(
-	"bitrix:catalog.section", 
-	"similar_list", 
+	"bitrix:catalog.section",
+	"similar_list",
 	array(
 		"ACTION_VARIABLE" => "action",
 		"ADD_PICT_PROP" => "-",
@@ -972,4 +1009,40 @@ dataLayer.push({
         }
     }
 });
+</script>
+
+<?php
+use Bitrix\Main\Engine\UrlManager;
+use Bitrix\Main\Web\Json;
+
+$baseUrl = UrlManager::getInstance()->getHostUrl();
+
+$schema = [
+    '@context' => 'https://schema.org/',
+    '@type' => 'Product',
+    'name' => $arResult['NAME'],
+    'image' => $baseUrl . $arResult['DETAIL_PICTURE']['SRC'],
+    'description' => $arResult['PREVIEW_TEXT'],
+    'sku' => $arResult['ID'],
+    'brand' => [
+        '@type' => 'Brand',
+        'name' => $arResult['BRANDS'][$arResult['PROPERTIES']['MANUFACTURER']['VALUE']] ?? '',
+    ],
+    'offers' => [
+        '@type' => 'Offer',
+        'url' => $arResult['DETAIL_PAGE_URL'],
+        'priceCurrency' => 'RUB',
+        'price' => $arResult['ITEM_PRICES'][0]['BASE_PRICE'] ?? 0,
+        'availability' => 'https://schema.org/InStock',
+    ],
+    'aggregateRating' => [
+        '@type' => 'AggregateRating',
+        'ratingValue' => $arResult['PROPERTIES']['RATING_VALUE']['VALUE'] ?: 5,
+        'reviewCount' => $arResult['PROPERTIES']['RATING_COUNT']['VALUE'] ?: 1,
+    ],
+];
+
+?>
+<script type="application/ld+json">
+<?= Json::encode($schema) ?>
 </script>

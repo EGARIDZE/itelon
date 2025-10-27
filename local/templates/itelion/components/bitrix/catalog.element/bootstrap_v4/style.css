@@ -1193,6 +1193,21 @@ input::-webkit-inner-spin-button { -webkit-appearance: none; }
 	}
 }
 
+
+.rating .star { background: none; border: 0; cursor: pointer; padding: 2px; }
+.rating .star.disabled { cursor: default; opacity: .4; }
+.rating .star-icon { fill: #ddd; transition: transform .1s; }
+.rating .star.filled .star-icon { fill: #f5b301; }
+.rating .star:hover .star-icon { transform: scale(1.05); }
+.rating-message {
+	margin-top: 5px;
+	font-size: 14px;
+	color: #333;
+	min-height: 20px;
+}
+.rating-message.success { color: #28a745; }
+.rating-message.error { color: #dc3545; }
+
 /*@media screen and (max-width: 576px) {*/
 /*	*/
 /*}*/

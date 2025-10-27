@@ -233,6 +233,8 @@ $APPLICATION->IncludeComponent(
 			3 => "MEMORY",
 			4 => "NUMBER_DISC",
 			5 => "POWER_UNIT",
+            6 => "RATING_VALUE",
+            7 => "RATING_COUNT",
 		),
 		"SEF_URL_TEMPLATES" => array(
 			"sections" => "catalog/",

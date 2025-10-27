@@ -4,6 +4,8 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 	die();
 }
 
+\CJSCore::Init(['ajax']);
+
 use Bitrix\Main\Loader;
 
 /**
@@ -14,6 +16,108 @@ use Bitrix\Main\Loader;
  */
 
 global $APPLICATION;
+
+?>
+    <script>
+        (function() {
+            const ajaxUrl = '<?= CUtil::JSEscape($templateFolder) ?>/ajax.php';
+            const productId = <?= (int)$arResult['ID'] ?>;
+
+            const ratingContainer = document.querySelector('.rating[data-product-id="<?= (int)$arResult['ID'] ?>"]');
+            if (!ratingContainer) return;
+
+            const stars = ratingContainer.querySelectorAll('.star');
+            const ratingValueElement = ratingContainer.querySelector('.js-rating-value');
+            const ratingCountElement = ratingContainer.querySelector('.js-rating-count');
+
+            const ratingValueId = document.getElementById('ratingValue');
+            const ratingCount = document.getElementById('ratingCount');
+
+            const messageElement = ratingContainer.querySelector('.js-rating-message');
+
+            renderRating(parseFloat(ratingContainer.dataset.initialValue || '5'), parseInt(ratingContainer.dataset.initialCount || '0'));
+
+            BX.ajax({
+                url: ajaxUrl,
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'getRating',
+                    productId
+                },
+                onsuccess: res => {
+                    if (res?.success) {
+                        renderRating(parseFloat(res.avg_rating), parseInt(res.cnt));
+                    }
+                }
+            });
+
+            if (hasVoted(productId)) {
+                disableStars();
+            }
+
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    if (hasVoted(productId) || this.classList.contains('disabled')) return;
+
+                    BX.ajax({
+                        url: ajaxUrl,
+                        method: 'POST',
+                        dataType: 'json',
+                        data: {
+                            sessid: '<?= bitrix_sessid() ?>',
+                            action: 'rate',
+                            productId,
+                            rating: parseInt(this.dataset.value)
+                        },
+                        onsuccess: res => {
+                            messageElement.textContent = res.success ? 'Ваш голос учтён!' : res.error || 'Ошибка при голосовании';
+                            messageElement.classList.toggle('success', res.success);
+                            messageElement.classList.toggle('error', !res.success);
+
+                            if (res.success) {
+                                renderRating(
+                                    res.avg_rating !== undefined ? parseFloat(res.avg_rating) : parseFloat(ratingContainer.dataset.initialValue || '5'),
+                                    res.cnt !== undefined ? parseInt(res.cnt) : parseInt(ratingContainer.dataset.initialCount || '0')
+                                );
+                                disableStars();
+                                document.cookie = `rated_${productId}=1; path=/; max-age=31536000`;
+                            }
+                        },
+                        onfailure: () => {
+                            messageElement.textContent = 'Ошибка сети';
+                            messageElement.classList.remove('success');
+                            messageElement.classList.add('error');
+                        }
+                    });
+                });
+            });
+
+            function renderRating(average, count) {
+                stars.forEach(star => {
+                    star.classList.toggle('filled', parseInt(star.dataset.value) <= Math.round(average));
+                });
+
+                if (ratingValueElement) {
+                    ratingValueElement.textContent = `${average.toFixed(1)} / 5`;
+                    ratingValueId.textContent = `${average.toFixed(1)} / 5`;
+                }
+                if (ratingCountElement) {
+                    ratingCountElement.textContent = `(${count})`;
+                    ratingCount.textContent = `${count}`;
+                }
+            }
+
+            function disableStars() {
+                stars.forEach(star => star.classList.add('disabled'));
+            }
+
+            function hasVoted(id) {
+                return document.cookie.includes(`rated_${id}=1`);
+            }
+        })();
+    </script>
+<?
 
 if (!empty($templateData['TEMPLATE_LIBRARY']))
 {
